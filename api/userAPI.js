@@ -4,7 +4,11 @@ const router=express.Router();
 const bcrypt=require('bcrypt')
 const jwt =require("jsonwebtoken");
 const userModel=require('../model/user')
+const postModel=require('../model/post')
+const commentModel=require('../model/comments')
+const middleware=require('../util/middleware')
 
+router.use("/users/",middleware)
 
 // API for signin with username and password
 router.post('/signin',(req,res)=>{
@@ -58,6 +62,86 @@ router.post("/register",async function(req,res){
         
     }
     
+    
+})
+
+
+router.get("/users/like/myposts", async function(req,res){
+    try{
+        let allUsers=[]
+        let users=await postModel.find({user:req.user},{likes:1})
+        users.forEach(likeArr => {
+            console.log(likeArr.likes)
+            allUsers=[...allUsers,...likeArr.likes]
+        });
+        let userDetails= await userModel.find({_id:{$in:allUsers}},{password:0,__v:0})
+        res.status(200).json({
+            status:"success",
+            users:userDetails
+        })
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            status:"failed"
+        })
+    }
+    
+})
+
+router.get("/users/comments/like/myposts", async function(req,res){
+    try{
+        let allPosts=[]
+        let posts=await postModel.find({user:req.user},{_id:1})
+        posts.forEach(post => {
+            allPosts.push(post._id)
+        });
+        let allUsers=[]
+        let users=await commentModel.find({post:{$in:allPosts}},{likes:1})
+        users.forEach(likeArr => {
+            console.log(likeArr.likes)
+            allUsers=[...allUsers,...likeArr.likes]
+        });
+        let userDetails= await userModel.find({_id:{$in:allUsers}},{password:0,__v:0})
+        res.status(200).json({
+            status:"success",
+            users:userDetails
+        })
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            status:"failed"
+        })
+    }
+    
+})
+router.get("/users/comments/myposts", async function(req,res){
+    try{
+        let allPosts=[]
+        let posts=await postModel.find({user:req.user},{_id:1})
+        posts.forEach(post => {
+            allPosts.push(post._id)
+        });
+        var allUsers=[]
+        let comments=await commentModel.find({post:{$in:allPosts}},{user:1})
+        console.log(comments)
+        comments.forEach(comment => {
+            allUsers.push(comment.user)
+        });
+        console.log(allUsers)
+        let userDetails= await userModel.find({_id:{$in:allUsers}},{password:0,__v:0})
+        res.status(200).json({
+            status:"success",
+            users:userDetails
+        })
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({
+            status:"failed"
+        })
+    }
     
 })
 

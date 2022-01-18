@@ -4,6 +4,7 @@ const app=express();
 const cors=require("cors")
 const bodyParser = require('body-parser')
 const userAPI=require("./api/userAPI")
+const postAPI=require('./api/postAPI')
 
 
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.use("/api/v1/user",userAPI); 
+app.use("/api/v1/post",postAPI); 
 
 
 const PORT=process.env.PORT || 8080

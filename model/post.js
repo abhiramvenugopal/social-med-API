@@ -2,8 +2,9 @@ const mongoose=require("mongoose")
 const Schema=mongoose.Schema
 
 const postSchema= new Schema({
+    title:{type:String, required:true},
     location:{type:String, required:true},
-    likes :[Schema.Types.ObjectId],
+    likes :[{type:Schema.Types.ObjectId,unique:true,ref:"users"}],
     description:{type:String, required:true},
     PostImage:{type:String, required:true},
     datetime :{type:Date,required:true},
