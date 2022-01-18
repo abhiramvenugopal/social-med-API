@@ -65,7 +65,7 @@ router.post("/register",async function(req,res){
     
 })
 
-
+//API to fetch the latest list of users liking my posts
 router.get("/users/like/myposts", async function(req,res){
     try{
         let allUsers=[]
@@ -89,6 +89,7 @@ router.get("/users/like/myposts", async function(req,res){
     
 })
 
+// API to fetch the latest list of users liking my comments on any post
 router.get("/users/comments/like/myposts", async function(req,res){
     try{
         let allPosts=[]
@@ -116,6 +117,8 @@ router.get("/users/comments/like/myposts", async function(req,res){
     }
     
 })
+
+// API to fetch the latest list of users commenting on my post
 router.get("/users/comments/myposts", async function(req,res){
     try{
         let allPosts=[]
